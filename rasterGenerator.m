@@ -9,7 +9,7 @@
 % x_amplitude so close to 1, which makes the 'escape line' so close to the
 % scan pattern. You can rotate the figure to see the x-y plan that shows
 % the pattern. Double check all of the data are within 0<x<1 and 0<y<1
-% before importing the .smp file to mirrocleDraw. 
+% before importing the .smp file to mirrocleDraw. edit
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
@@ -17,8 +17,8 @@ clear all;close all;clc
 
 %%%%prarameters that could be set up%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-line=24; % number of vertical lines of the scan pattern
-datapoints_x=27;% number of datapoints for each verical line
+line=48; % number of vertical lines of the scan pattern
+datapoints_x=520;% number of datapoints for each verical line
 x_amplitude=0.7; %amplitude for vertical direction, should be value from(0 to 1), 
                   %don't set to 1. The closer this value set to 1, the less distance 
                   %between pattern and escape line would be.
@@ -115,20 +115,34 @@ pattern=[coordinates z];
 
 
 
-
-background_datapoints=10;
+gap_datapoints=50;
+gap=1-x_amplitude;
+gap_step=gap/gap_datapoints;
+background_datapoints=100;
 back_x=-1;
 back_y_step=2*y_amplitude/background_datapoints;
 
+gap1=zeros(gap_datapoints,3);
 back=zeros(background_datapoints,3);
-r=1
+gap2=zeros(gap_datapoints,3);
 
+for i=1:gap_datapoints+1
+    gap1(i,1)=-x_amplitude-(i-1)*gap_step;
+    gap1(i,2)=-y_amplitude;
+    gap1(i,3)=0;
+end
 for r=1:background_datapoints+1
     back(r,1)=back_x;
     back(r,2)=-y_amplitude+(r-1)*back_y_step;
 end
+for i=1:gap_datapoints+1
+    gap2(i,1)=-1+(i-1)*gap_step;
+    gap2(i,2)=y_amplitude;
+    gap2(i,3)=0;
+end
+back_to_start=[-x_amplitude,y_amplitude,255];
 
-final=[pattern; back];
+final=[pattern;gap1; back;gap2;back_to_start];
 final_x=final(:,1);
 final_y=final(:,2);
 final_z=final(:,3);
